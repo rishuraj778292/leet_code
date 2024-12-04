@@ -69,6 +69,9 @@ public:
 
 
 int main(){
+    vector<int>v{3,2,3,1,2,4,5,5,6};
+    Solution ans;
+    cout<< ans.findKthLargest(v,4)<<endl;
     return 0;
 }
 
