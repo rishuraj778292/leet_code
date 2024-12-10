@@ -43,29 +43,85 @@ using namespace std;
 class Solution {
 public:
     int maximumLength(string s) {
-        unordered_map<string, int> substringCount;
-        for (int i = 0; i < s.size(); i++) {
-            string subString = "";
-            for (int j = i; j < s.size(); j++) {
-                if (subString.empty() || subString.back() == s[j]) {
-                    subString += s[j];
-                    substringCount[subString]++;
-                }
-                else{
+        // m-1 O(n^3)
+
+        // unordered_map<string, int> substringCount;
+        // for (int i = 0; i < s.size(); i++) {
+        //     string subString = "";
+        //     for (int j = i; j < s.size(); j++) {
+        //         if (subString.empty() || subString.back() == s[j]) {
+        //             subString += s[j];
+        //             substringCount[subString]++;
+        //         }
+        //         else{
+        //             break;
+        //         }
+        //     }
+        // }
+        // int length = -1;
+        // for (auto subStr : substringCount) {
+        //     if (subStr.second >= 3) {
+        //         int temp = subStr.first.length();
+        //         if (temp > length) {
+        //             length = temp;
+        //         }
+        //     }
+        // }
+        // return length;
+
+        // m-2 O(n^2)
+
+        // map<pair<char,int>,int>mp;
+        //  for (int i = 0; i < s.size(); i++) {
+        //     char ch = s[i];
+        //     int length =0;
+        //     for (int j = i; j < s.size(); j++) {
+        //         if (ch==s[j]) {
+        //            length++;
+        //            mp[{ch,length}]++;
+        //         }
+        //         else{
+        //             break;
+        //         }
+        //     }
+        // }
+        // int ans =-1;
+        // for (auto &it : mp) {
+        //     if(it.second>=3){
+        //         ans = max(ans,it.first.second);
+        //     }
+        // }
+        // return ans;
+
+        //m-3 - O(n)
+
+        int n = s.size();
+        vector<vector<int>> table(26, vector<int>(n + 1, 0));
+        int length = 0;
+        char prev_char = s[0];
+        for (int i = 0; i < n; i++) {
+            char curr_char = s[i];
+            if (curr_char == prev_char) {
+                length += 1;
+                table[curr_char - 'a'][length] +=1;
+            } else {
+                length = 1;
+                prev_char = curr_char;
+                table[curr_char - 'a'][length] +=1;
+            }
+        }
+        int result = -1;
+        for (int i = 0; i < 26; i++) {
+            int cumSum = 0;
+            for (int j = n; j >= 1; j--) {
+                cumSum += table[i][j];
+                if (cumSum >= 3) {
+                    result = max(result, j);
                     break;
                 }
             }
         }
-        int length = -1;
-        for (auto subStr : substringCount) {
-            if (subStr.second >= 3) {
-                int temp = subStr.first.length();
-                if (temp > length) {
-                    length = temp;
-                }
-            }
-        }
-        return length;
+        return result;
     }
 };
 int main(){
